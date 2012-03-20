@@ -4,6 +4,14 @@
 
   [2012-03-20 Tue]
 
+#+begin_src sh
+lein version
+#+end_src
+
+#+results:
+: Leiningen 1.7.0 on Java 1.6.0_26 Java HotSpot(TM) 64-Bit Server VM
+
+
 #+begin_src sh :eval never
 lein new hoge
 cd hoge
