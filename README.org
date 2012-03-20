@@ -1,0 +1,91 @@
+#+TITLE: stuff that surprises me. don't know if bug or something else.
+
+* leiningen project with =ring= dev-dependency                      :clojure:
+
+  [2012-03-20 Tue]
+
+#+begin_src sh :eval never
+lein new hoge
+cd hoge
+vi project.clj
+#+end_src
+
+  
+** =project.clj=
+
+*** works
+
+    bare =project.clj=
+
+    #+begin_src clojure :eval never
+      (defproject hoge "1.0.0-SNAPSHOT"
+        :description "FIXME: write description"
+        :dependencies [[org.clojure/clojure "1.3.0"]])
+    #+end_src
+    
+    add =ring= dependency
+
+    #+begin_src clojure :eval never
+      (defproject hoge "1.0.0-SNAPSHOT"
+        :description "FIXME: write description"
+        :dependencies [[org.clojure/clojure "1.3.0"]
+                       [ring "1.0-SNAPSHOT"]
+                       ])
+    #+end_src
+
+    running =lein deps= repeatedly: ~Copying 18 files to /tmp/surprising/test/hoge/lib~
+
+*** doesn't work
+
+    #+begin_src clojure :eval never
+      (defproject hoge "1.0.0-SNAPSHOT"
+        :description "FIXME: write description"
+        :dependencies [[org.clojure/clojure "1.3.0"]]
+        :dev-dependencies [[ring "1.0-SNAPSHOT"]]
+        )
+    #+end_src
+
+**** running =lein deps= repeatedly:
+
+     first time:
+     
+     #+begin_example
+     Copying 18 files to /tmp/surprising/test/hoge/lib
+     Copying 17 files to /tmp/surprising/test/hoge/lib/dev
+     #+end_example
+
+     thereafter:
+
+     #+begin_example
+       Exception in thread "main" java.lang.IllegalStateException: Var user/settings is unbound. (NO_SOURCE_FILE:0)
+         at clojure.lang.Compiler.eval(Compiler.java:5440)
+         at clojure.lang.Compiler.eval(Compiler.java:5391)
+         at clojure.core$eval.invoke(core.clj:2382)
+         at clojure.main$eval_opt.invoke(main.clj:235)
+         at clojure.main$initialize.invoke(main.clj:254)
+         at clojure.main$script_opt.invoke(main.clj:270)
+         at clojure.main$main.doInvoke(main.clj:354)
+         at clojure.lang.RestFn.invoke(RestFn.java:457)
+         at clojure.lang.Var.invoke(Var.java:377)
+         at clojure.lang.AFn.applyToHelper(AFn.java:172)
+         at clojure.lang.Var.applyTo(Var.java:482)
+         at clojure.main.main(main.java:37)
+       Caused by: java.lang.IllegalStateException: Var user/settings is unbound.
+         at clojure.lang.Var.deref(Var.java:142)
+         at clojure.core$deref.invoke(core.clj:1765)
+         at leiningen.core$user_settings.invoke(core.clj:46)
+         at leiningen.core$hook_namespaces.invoke(core.clj:221)
+         at leiningen.core$load_hooks.invoke(core.clj:224)
+         at leiningen.core$_main.doInvoke(core.clj:330)
+         at clojure.lang.RestFn.invoke(RestFn.java:410)
+         at clojure.lang.AFn.applyToHelper(AFn.java:161)
+         at clojure.lang.RestFn.applyTo(RestFn.java:132)
+         at clojure.core$apply.invoke(core.clj:542)
+         at leiningen.core$_main.invoke(core.clj:334)
+         at user$eval42.invoke(NO_SOURCE_FILE:1)
+         at clojure.lang.Compiler.eval(Compiler.java:5424)
+         ... 11 more
+       
+     #+end_example
+
+     
