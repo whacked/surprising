@@ -97,3 +97,43 @@ vi project.clj
      #+end_example
 
      
+* haxe nme tutorial 04-TextFields
+
+  [2013-01-12 Sat]
+
+  so tutorials 1 and 2 run fine when you execute
+
+#+begin_src sh :eval never
+nme test *.nmml flash
+#+end_src
+
+which produces the swf target, as well as
+
+#+begin_src sh :eval never
+nme test *.nmml html5
+#+end_src
+
+which is supposed to produce the html target.
+
+but html5 doesn't work for 04-TextFields. It runs without error, but exports nothing
+
+Even if you run with =-verbose=, this is all you get
+
+#+begin_example
+NME Command-Line Tools (3.5.3)
+==============================
+Initializing project...
+Using project file: Whack A Mole.nmml
+Reading HXCPP config: $HOME/.hxcpp_config.xml
+Using target platform: HTML5
+Running command: update
+
+#+end_example
+
+first run of =update= will show =mkdir= for the target in the =bin= dir. but that's it.
+
+To get 04-TextFields to produce anything, I had to remove all *.ttf files from the =Assets= dir.
+
+then the html target is produced. But the result unsurprisingly doesn't do anything, due to at least the cross domain restriction, and (i didn't further investigate), probably unloadable resources.
+
+
